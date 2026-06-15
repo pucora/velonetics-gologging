@@ -5,7 +5,7 @@ go 1.23.0
 toolchain go1.24.6
 
 require (
-	github.com/velonetics/lura/v2 v2.11.0
+	github.com/velonetics/lura/v2 v2.0.0
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 )
 
