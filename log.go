@@ -14,11 +14,11 @@ import (
 )
 
 // Namespace is the key to look for extra configuration details
-const Namespace = "github_com/pucora/velonetics-gologging"
+const Namespace = "github_com/pucora/pucora-gologging"
 
 var (
 	// ErrEmptyValue is the error returned when there is no config under the namespace
-	ErrWrongConfig = fmt.Errorf("getting the extra config for the velonetics-gologging module")
+	ErrWrongConfig = fmt.Errorf("getting the extra config for the pucora-gologging module")
 	// DefaultPattern is the pattern to use for rendering the logs
 	LogstashPattern          = `{"@timestamp":"%{time:2006-01-02T15:04:05.000+00:00}", "@version": 1, "level": "%{level}", "message": "%{message}", "module": "%{module}"}`
 	DefaultPattern           = ` %{time:2006/01/02 - 15:04:05.000} %{color}▶ %{level}%{color:reset} %{message}`

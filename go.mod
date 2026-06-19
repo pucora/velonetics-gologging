@@ -1,4 +1,4 @@
-module github.com/pucora/velonetics-gologging/v2
+module github.com/pucora/pucora-gologging/v2
 
 go 1.23.0
 
