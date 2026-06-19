@@ -1,12 +1,12 @@
 # velonetics-gologging
 
-An improved logger for the Velonetics framework
+An improved logger for the Pucora framework
 
 ## How to use it
 
 Import the package
 
-	import "github.com/velonetics/velonetics-gologging"
+	import "github.com/pucora/velonetics-gologging"
 
 After parsing the config file (here `cfg`), call the logger factory with the extra config of the system
 
@@ -16,14 +16,14 @@ And the logger is ready to be injected
 
 ## Configuration
 
-Add the `github_com/velonetics/velonetics-gologging` section to the service extra config.
+Add the `github_com/pucora/velonetics-gologging` section to the service extra config.
 
 Example:
 
 	"extra": {
-		"github_com/velonetics/velonetics-gologging": {
+		"github_com/pucora/velonetics-gologging": {
 			"level":  "INFO",
-			"prefix": "[VELONETICS]",
+			"prefix": "[PUCORA]",
 			"syslog": false,
 			"stdout": true
 		}

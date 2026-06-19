@@ -8,13 +8,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/velonetics/lura/v2/config"
-	"github.com/velonetics/lura/v2/logging"
+	"github.com/pucora/lura/v2/config"
+	"github.com/pucora/lura/v2/logging"
 	gologging "github.com/op/go-logging"
 )
 
 // Namespace is the key to look for extra configuration details
-const Namespace = "github_com/velonetics/velonetics-gologging"
+const Namespace = "github_com/pucora/velonetics-gologging"
 
 var (
 	// ErrEmptyValue is the error returned when there is no config under the namespace
@@ -33,13 +33,13 @@ func SetFormatterSelector(f func(io.Writer) string) {
 	defaultFormatterSelector = f
 }
 
-// NewLogger returns a Velonetics logger wrapping a gologging logger
+// NewLogger returns a Pucora logger wrapping a gologging logger
 func NewLogger(cfg config.ExtraConfig, ws ...io.Writer) (logging.Logger, error) {
 	logConfig, ok := ConfigGetter(cfg).(Config)
 	if !ok {
 		return nil, ErrWrongConfig
 	}
-	module := "VELONETICS"
+	module := "PUCORA"
 	loggr := gologging.MustGetLogger(module)
 
 	if logConfig.StdOut {
