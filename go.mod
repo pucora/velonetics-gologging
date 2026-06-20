@@ -7,4 +7,4 @@ require (
 	github.com/pucora/lura/v2 v2.0.9
 )
 
-require golang.org/x/text v0.34.0 // indirect
+require golang.org/x/text v0.37.0 // indirect
