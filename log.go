@@ -4,9 +4,7 @@ package gologging
 import (
 	"fmt"
 	"io"
-	"log/syslog"
 	"os"
-	"strings"
 
 	"github.com/pucora/lura/v2/config"
 	"github.com/pucora/lura/v2/logging"
@@ -24,8 +22,6 @@ var (
 	DefaultPattern           = ` %{time:2006/01/02 - 15:04:05.000} %{color}▶ %{level}%{color:reset} %{message}`
 	ActivePattern            = DefaultPattern
 	defaultFormatterSelector = func(io.Writer) string { return ActivePattern }
-	defaultSyslogFacility    = syslog.LOG_LOCAL3
-	defaultSyslogSeverity    = syslog.LOG_CRIT
 )
 
 // SetFormatterSelector sets the ddefaultFormatterSelector function
@@ -47,13 +43,11 @@ func NewLogger(cfg config.ExtraConfig, ws ...io.Writer) (logging.Logger, error) 
 	}
 
 	if logConfig.Syslog {
-		var err error
-		var w *syslog.Writer
-		w, err = syslog.New(logConfig.SyslogSeverity|logConfig.SysLogFacility, logConfig.Prefix)
+		w, err := newSyslogWriter(logConfig.SyslogSeverity, logConfig.SysLogFacility, logConfig.Prefix)
 		if err != nil {
 			return nil, err
 		}
-		ws = append(ws, syslogIoWriterWrapper{w})
+		ws = append(ws, w)
 	}
 
 	if logConfig.Format == "logstash" {
@@ -70,10 +64,9 @@ func NewLogger(cfg config.ExtraConfig, ws ...io.Writer) (logging.Logger, error) 
 	for _, w := range ws {
 		var pattern string
 		var prefix string
-		switch w.(type) {
-		case syslogIoWriterWrapper:
+		if isSyslogWriter(w) {
 			pattern = "%{level} > %{message}"
-		default:
+		} else {
 			prefix = logConfig.Prefix
 			pattern = defaultFormatterSelector(w)
 		}
@@ -137,8 +130,8 @@ type Config struct {
 	Level          string
 	StdOut         bool
 	Syslog         bool
-	SysLogFacility syslog.Priority
-	SyslogSeverity syslog.Priority
+	SysLogFacility syslogPriority
+	SyslogSeverity syslogPriority
 	Prefix         string
 	Format         string
 	CustomFormat   string
@@ -196,46 +189,4 @@ func (l Logger) Fatal(v ...interface{}) {
 
 type syslogIoWriterWrapper struct {
 	io.Writer
-}
-
-func parseSyslogFacility(name string) syslog.Priority {
-	switch strings.ToLower(name) {
-	case "local0":
-		return syslog.LOG_LOCAL0
-	case "local1":
-		return syslog.LOG_LOCAL1
-	case "local2":
-		return syslog.LOG_LOCAL2
-	case "local3":
-		return syslog.LOG_LOCAL3
-	case "local4":
-		return syslog.LOG_LOCAL4
-	case "local5":
-		return syslog.LOG_LOCAL5
-	case "local6":
-		return syslog.LOG_LOCAL6
-	case "local7":
-		return syslog.LOG_LOCAL7
-	default:
-		return defaultSyslogFacility
-	}
-}
-
-func parseSyslogSeverity(level string) syslog.Priority {
-	switch strings.ToLower(level) {
-	case "fatal":
-		return syslog.LOG_EMERG
-	case "critical":
-		return syslog.LOG_CRIT
-	case "error":
-		return syslog.LOG_ERR
-	case "warning":
-		return syslog.LOG_WARNING
-	case "info":
-		return syslog.LOG_INFO
-	case "debug":
-		return syslog.LOG_DEBUG
-	default:
-		return defaultSyslogSeverity
-	}
 }
